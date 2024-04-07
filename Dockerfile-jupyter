@@ -1,6 +1,8 @@
 ARG PYTHON_BASE=3.11-slim
 FROM python:${PYTHON_BASE} AS builder
 
+RUN apt update && apt-get -y install libc-dev gcc g++ libfreetype6-dev pkg-config pkg-config
+
 RUN pip install -U pdm
 # disable update check
 ENV PDM_CHECK_UPDATE=false
@@ -15,6 +17,7 @@ COPY src/ /app/src
 
 # run stage
 FROM python:${PYTHON_BASE}
+RUN apt update && apt-get -y install libc-dev gcc g++ libfreetype6-dev pkg-config pkg-config
 
 COPY --from=builder /app/.venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
